@@ -35,8 +35,9 @@ variablesController.get(
 
 variablesController.post(
 	'/',
-	ResponseHelper.send(async () => {
-		throw new ResponseHelper.BadRequestError('No variables license found');
+	ResponseHelper.send(async (req) => {
+		const { key, value } = req.body
+		return Container.get(VariablesService).create(key, value);
 	}),
 );
 
@@ -54,8 +55,14 @@ variablesController.get(
 
 variablesController.patch(
 	'/:id(\\w+)',
-	ResponseHelper.send(async () => {
-		throw new ResponseHelper.BadRequestError('No variables license found');
+	ResponseHelper.send(async (req) => {
+		const id = req.params.id;
+		const { key, value } = req.body
+		const variable = await Container.get(VariablesService).getCached(id);
+		if (variable === null) {
+			throw new ResponseHelper.NotFoundError(`Variable with id ${req.params.id} not found`);
+		}
+		return Container.get(VariablesService).update(variable, key, value);
 	}),
 );
 

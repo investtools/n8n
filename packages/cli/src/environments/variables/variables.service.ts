@@ -11,6 +11,26 @@ export class VariablesService {
 		protected variablesRepository: VariablesRepository,
 	) {}
 
+	async create(key: string, value: string): Promise<Variables> {
+		const variable = await this.variablesRepository.create({ key, value });
+		await this.variablesRepository.save(variable);
+
+		await this.updateCache();
+		return variable
+	}
+
+	async update(variable: Variables, key: string, value: string): Promise<Variables> {
+    // Update the existing record
+    variable.key = key;
+    variable.value = value;
+
+    // Save the updated record to the database using the repository's save method
+    await this.variablesRepository.save(variable);
+
+		await this.updateCache();
+		return variable
+	}
+
 	async getAllCached(): Promise<Variables[]> {
 		const variables = await this.cacheService.get('variables', {
 			async refreshFunction() {

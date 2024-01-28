@@ -17,14 +17,14 @@ export async function createVariable(
 	context: IRestApiContext,
 	data: Omit<EnvironmentVariable, 'id'>,
 ) {
-	return makeRestApiRequest(context, 'POST', '/variables', data as unknown as IDataObject);
+	return makeRestApiRequest(context, 'POST', '/variables', data);
 }
 
 export async function updateVariable(
 	context: IRestApiContext,
 	{ id, ...data }: EnvironmentVariable,
 ) {
-	return makeRestApiRequest(context, 'PATCH', `/variables/${id}`, data as unknown as IDataObject);
+	return makeRestApiRequest(context, 'PATCH', `/variables/${id}`, data);
 }
 
 export async function deleteVariable(

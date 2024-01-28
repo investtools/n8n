@@ -3,7 +3,6 @@ import type { ComponentPublicInstance, PropType } from 'vue';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import type { EnvironmentVariable, Rule, RuleGroup } from '@/Interface';
 import { useI18n, useToast, useCopyToClipboard } from '@/composables';
-import { EnterpriseEditionFeature } from '@/constants';
 import { useSettingsStore, useUsersStore } from '@/stores';
 import { getVariablesPermissions } from '@/permissions';
 
@@ -42,12 +41,8 @@ const valueInputRef = ref<HTMLElement>();
 
 const usage = ref(`$vars.${props.data.key}`);
 
-const isFeatureEnabled = computed(() =>
-	settingsStore.isEnterpriseFeatureEnabled(EnterpriseEditionFeature.Variables),
-);
-
 const showActions = computed(
-	() => isFeatureEnabled.value && (permissions.edit || permissions.delete),
+	() => (permissions.edit || permissions.delete),
 );
 
 onMounted(() => {
@@ -178,7 +173,7 @@ function focusFirstInput() {
 				</n8n-tooltip>
 			</div>
 		</td>
-		<td v-if="isFeatureEnabled">
+		<td>
 			<div v-if="editing" :class="$style.buttons">
 				<n8n-button
 					data-test-id="variable-row-cancel-button"
